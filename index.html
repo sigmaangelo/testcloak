@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Game Cloak</title>
+<title>Hide Link</title>
 <style>
   body {
     display: flex;
@@ -11,7 +11,6 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-    margin: 0;
     font-family: Arial, sans-serif;
   }
   button {
@@ -20,50 +19,26 @@
     margin: 10px;
     cursor: pointer;
   }
-  #instructions {
+  #secretLink {
     margin-top: 20px;
     font-size: 1.2em;
+    word-break: break-all;
   }
 </style>
 </head>
 <body>
 
-<button id="cloakBtn">Cloak</button>
-<div id="instructions">
-  <p>After cloaking, you'll see a hidden link. Press 'T' to exit or close the tab.</p>
-</div>
+<button id="hideBtn">Hide Link</button>
+<div id="secretLink">Your link will appear here...</div>
 
 <script>
-  const cloakBtn = document.getElementById('cloakBtn');
-  const realURL = window.location.href; // store your game link
-  const obfuscatedURL = 'https://example.com/hidden'; // dummy URL
+  const realLink = 'https://yourgame.com/yourgame'; // Your real game URL
+  const displayLink = 'https://short.url/abc123'; // Obfuscated or short URL
 
-  // Store real URL in session storage
-  sessionStorage.setItem('realURL', realURL);
-
-  function cloak() {
-    // Replace URL with dummy
-    history.replaceState({}, '', obfuscatedURL);
-  }
-
-  function restore() {
-    const url = sessionStorage.getItem('realURL');
-    if (url) {
-      window.location.href = url;
-    }
-  }
-
-  document.getElementById('cloakBtn').addEventListener('click', () => {
-    cloak();
-  });
-
-  // Detect key press for 'T'
-  document.addEventListener('keydown', (e) => {
-    if (e.key.toLowerCase() === 't') {
-      // On 'T', go back to real URL and close
-      restore();
-      window.close();
-    }
+  document.getElementById('hideBtn').addEventListener('click', () => {
+    // Show the real link only after user interaction
+    document.getElementById('secretLink').innerText = realLink;
+    // Optionally, you can replace the 'realLink' with a short URL
   });
 </script>
 
