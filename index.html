@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Fullscreen Trap</title>
+<title>Detect Exit Fullscreen</title>
 <style>
   body {
     display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: Arial, sans-serif;
@@ -31,16 +31,22 @@ btn.onclick = () => {
   }
 };
 
-// Detect Escape key press
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape') {
-    // Close the window/tab
+// Listen for fullscreen change events
+function handleFullscreenChange() {
+  if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+    // Fullscreen has been exited
+    alert('Fullscreen exited! Closing tab...');
+    // Attempt to close tab
     window.close();
 
-    // If window.close() doesn't work, try to navigate away or show message
+    // If window.close() doesn't work, redirect
     // window.location.href = 'about:blank';
   }
-});
+}
+
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+document.addEventListener('MSFullscreenChange', handleFullscreenChange);
 </script>
 
 </body>
