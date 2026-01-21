@@ -3,43 +3,44 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Hide Link</title>
+<title>Fullscreen Trap</title>
 <style>
   body {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    font-family: Arial, sans-serif;
+    display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: Arial, sans-serif;
   }
-  button {
-    padding: 20px 40px;
-    font-size: 1.5em;
-    margin: 10px;
-    cursor: pointer;
-  }
-  #secretLink {
-    margin-top: 20px;
-    font-size: 1.2em;
-    word-break: break-all;
+  #startBtn {
+    padding: 20px; font-size: 1.5em; cursor: pointer;
   }
 </style>
 </head>
 <body>
 
-<button id="hideBtn">Hide Link</button>
-<div id="secretLink">Your link will appear here...</div>
+<button id="startBtn">Go Fullscreen & Lock</button>
 
 <script>
-  const realLink = 'https://yourgame.com/yourgame'; // Your real game URL
-  const displayLink = 'https://short.url/abc123'; // Obfuscated or short URL
+const btn = document.getElementById('startBtn');
 
-  document.getElementById('hideBtn').addEventListener('click', () => {
-    // Show the real link only after user interaction
-    document.getElementById('secretLink').innerText = realLink;
-    // Optionally, you can replace the 'realLink' with a short URL
-  });
+btn.onclick = () => {
+  // Enter fullscreen
+  if (document.documentElement.requestFullscreen) {
+    document.documentElement.requestFullscreen();
+  } else if (document.documentElement.webkitRequestFullscreen) {
+    document.documentElement.webkitRequestFullscreen();
+  } else if (document.documentElement.msRequestFullscreen) {
+    document.documentElement.msRequestFullscreen();
+  }
+};
+
+// Detect Escape key press
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    // Close the window/tab
+    window.close();
+
+    // If window.close() doesn't work, try to navigate away or show message
+    // window.location.href = 'about:blank';
+  }
+});
 </script>
 
 </body>
