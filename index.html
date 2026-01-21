@@ -1,0 +1,22 @@
+<button onclick="enterFullscreen(); cloak();">CLOAK</button>
+<script>
+function enterFullscreen() {
+  const el = document.documentElement;
+  if (el.requestFullscreen) el.requestFullscreen();
+  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+}
+
+function panicClose() {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  }
+  window.close();
+}
+
+// Panic key: press T
+document.addEventListener("keydown", (e) => {
+  if (e.key.toLowerCase() === "t") {
+    panicClose();
+  }
+});
+</script>
