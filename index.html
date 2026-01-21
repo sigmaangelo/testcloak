@@ -1,22 +1,71 @@
-<button onclick="enterFullscreen(); cloak();">CLOAK</button>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Game Cloak</title>
+<style>
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    font-family: Arial, sans-serif;
+  }
+  button {
+    padding: 20px 40px;
+    font-size: 1.5em;
+    margin: 10px;
+    cursor: pointer;
+  }
+  #instructions {
+    margin-top: 20px;
+    font-size: 1.2em;
+  }
+</style>
+</head>
+<body>
+
+<button id="cloakBtn">Cloak</button>
+<div id="instructions">
+  <p>After cloaking, you'll see a hidden link. Press 'T' to exit or close the tab.</p>
+</div>
+
 <script>
-function enterFullscreen() {
-  const el = document.documentElement;
-  if (el.requestFullscreen) el.requestFullscreen();
-  else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
-}
+  const cloakBtn = document.getElementById('cloakBtn');
+  const realURL = window.location.href; // store your game link
+  const obfuscatedURL = 'https://example.com/hidden'; // dummy URL
 
-function panicClose() {
-  if (document.fullscreenElement) {
-    document.exitFullscreen();
-  }
-  window.close();
-}
+  // Store real URL in session storage
+  sessionStorage.setItem('realURL', realURL);
 
-// Panic key: press T
-document.addEventListener("keydown", (e) => {
-  if (e.key.toLowerCase() === "t") {
-    panicClose();
+  function cloak() {
+    // Replace URL with dummy
+    history.replaceState({}, '', obfuscatedURL);
   }
-});
+
+  function restore() {
+    const url = sessionStorage.getItem('realURL');
+    if (url) {
+      window.location.href = url;
+    }
+  }
+
+  document.getElementById('cloakBtn').addEventListener('click', () => {
+    cloak();
+  });
+
+  // Detect key press for 'T'
+  document.addEventListener('keydown', (e) => {
+    if (e.key.toLowerCase() === 't') {
+      // On 'T', go back to real URL and close
+      restore();
+      window.close();
+    }
+  });
 </script>
+
+</body>
+</html>
