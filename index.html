@@ -1,55 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8" />
-<title>Cloaked Entry</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Fullscreen Exit Redirect</title>
 <style>
   body {
-    background: #f4f4f4;
-    font-family: "Segoe UI", Arial, sans-serif;
-    text-align: center;
-    margin-top: 120px;
-  } 
-
-  h1 {
-    font-size: 36px;
-    font-weight: 700;
-    color: #222;
-    margin-bottom: 30px;
+    display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: Arial, sans-serif;
   }
-
-  button {
-    padding: 15px 35px;
-    font-size: 20px;
-    background: black;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    cursor: pointer;
-    transition: 0.2s ease;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-  }
-
-  button:hover {
-    opacity: 0.85;
-    transform: scale(1.03);
-  }
-
-  button:active {
-    transform: scale(0.98);
+  #startBtn {
+    padding: 20px; font-size: 1.5em; cursor: pointer;
   }
 </style>
 </head>
 <body>
 
-<h1>Press to Cloak</h1>
-<button onclick="startCloak()">CLOAK</button>
+<button id="startBtn">Enter Fullscreen</button>
 
 <script>
-const PASSWORD = "ᎤᏇᏕ1Ꮭ0ᎧᏰᎧᎥᏬᎩᏖᏒᎴ";
+const startBtn = document.getElementById('startBtn');
 
-// Function to enter fullscreen
-function startCloak() {
+startBtn.onclick = () => {
+  // Request fullscreen
   const elem = document.documentElement;
   if (elem.requestFullscreen) {
     elem.requestFullscreen();
@@ -58,39 +30,20 @@ function startCloak() {
   } else if (elem.msRequestFullscreen) {
     elem.msRequestFullscreen();
   }
+};
 
-  // After entering fullscreen, prompt for password
-  // Wait a tiny bit to ensure fullscreen is active
-  setTimeout(showPasswordPrompt, 300);
-}
-
-function showPasswordPrompt() {
-  // Prompt for password directly
-  const entered = prompt("Enter Password");
-  if (entered === null) {
-    // Cancelled
-    exitFullscreen();
-    return;
-  }
-  if (entered !== PASSWORD) {
-    alert("Wrong password");
-    exitFullscreen();
-    return;
-  }
-  // Correct password
-  alert("Access granted!");
-  // Keep in fullscreen, or do additional actions here
-}
-
-function exitFullscreen() {
-  if (document.exitFullscreen) {
-    document.exitFullscreen();
-  } else if (document.webkitExitFullscreen) {
-    document.webkitExitFullscreen();
-  } else if (document.msExitFullscreen) {
-    document.msExitFullscreen();
+// Detect when fullscreen is exited
+function handleFullscreenChange() {
+  const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  if (!isFullscreen) {
+    // Exit detected, redirect
+    window.location.href = 'about:blank'; // or your exit page URL
   }
 }
+
+document.addEventListener('fullscreenchange', handleFullscreenChange);
+document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+document.addEventListener('MSFullscreenChange', handleFullscreenChange);
 </script>
 
 </body>
