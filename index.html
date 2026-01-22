@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Fullscreen Exit Detection</title>
+<title>Fullscreen Exit Redirect</title>
 <style>
   body {
     display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: Arial, sans-serif;
@@ -21,29 +21,23 @@
 const startBtn = document.getElementById('startBtn');
 
 startBtn.onclick = () => {
-  // Enter fullscreen
-  if (document.documentElement.requestFullscreen) {
-    document.documentElement.requestFullscreen();
-  } else if (document.documentElement.webkitRequestFullscreen) {
-    document.documentElement.webkitRequestFullscreen();
-  } else if (document.documentElement.msRequestFullscreen) {
-    document.documentElement.msRequestFullscreen();
+  // Request fullscreen
+  const elem = document.documentElement;
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.webkitRequestFullscreen) {
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) {
+    elem.msRequestFullscreen();
   }
 };
 
 // Detect when fullscreen is exited
 function handleFullscreenChange() {
-  if (
-    !document.fullscreenElement &&
-    !document.webkitFullscreenElement &&
-    !document.msFullscreenElement
-  ) {
-    // Fullscreen exited
-    // Attempt to close tab (may not work in all browsers)
-    window.close();
-
-    // Fallback: redirect to about:blank or your exit page
-    // window.location.href = 'about:blank';
+  const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+  if (!isFullscreen) {
+    // Exit detected, redirect
+    window.location.href = 'about:blank'; // or your exit page URL
   }
 }
 
