@@ -1,49 +1,175 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Fullscreen Exit Redirect</title>
+<title>Cloaked Entry</title>
 <style>
   body {
-    display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    font-family: "Segoe UI", Arial, sans-serif;
+    text-align: center;
+    margin-top: 120px;
+  } 
+
+  h1 {
+    font-size: 36px;
+    font-weight: 700;
+    color: #222;
+    margin-bottom: 30px;
   }
-  #startBtn {
-    padding: 20px; font-size: 1.5em; cursor: pointer;
+
+  button {
+    padding: 15px 35px;
+    font-size: 20px;
+    background: black;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: 0.2s ease;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+  }
+
+  button:hover {
+    opacity: 0.85;
+    transform: scale(1.03);
+  }
+
+  button:active {
+    transform: scale(0.98);
   }
 </style>
 </head>
+
 <body>
 
-<button id="startBtn">Enter Fullscreen</button>
+<h1>Press to Cloak</h1>
+<button onclick="cloak()">CLOAK</button>
 
 <script>
-const startBtn = document.getElementById('startBtn');
+const PASSWORD = "ᎤᏇᏕ1Ꮭ0ᎧᏰᎧᎥᏬᎩᏖᏒᎴ";
 
-startBtn.onclick = () => {
-  // Request fullscreen
-  const elem = document.documentElement;
-  if (elem.requestFullscreen) {
-    elem.requestFullscreen();
-  } else if (elem.webkitRequestFullscreen) {
-    elem.webkitRequestFullscreen();
-  } else if (elem.msRequestFullscreen) {
-    elem.msRequestFullscreen();
-  }
-};
+let fullscreenActive = false;
+
+function cloak() {
+    // Request fullscreen
+    const elem = document.documentElement;
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.webkitRequestFullscreen) {
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) {
+        elem.msRequestFullscreen();
+    }
+
+    // Set flag
+    fullscreenActive = true;
+}
 
 // Detect when fullscreen is exited
 function handleFullscreenChange() {
-  const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
-  if (!isFullscreen) {
-    // Exit detected, redirect
-    window.location.href = 'about:blank'; // or your exit page URL
-  }
+    const isFullscreen = document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement;
+    if (!isFullscreen && fullscreenActive) {
+        // Exited fullscreen, show password prompt
+        showPasswordPrompt();
+    }
 }
 
 document.addEventListener('fullscreenchange', handleFullscreenChange);
 document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
 document.addEventListener('MSFullscreenChange', handleFullscreenChange);
+
+function showPasswordPrompt() {
+    // Create overlay
+    const overlay = document.createElement('div');
+    overlay.style.position = 'fixed';
+    overlay.style.top = 0; overlay.style.left = 0;
+    overlay.style.width = '100%'; overlay.style.height = '100%';
+    overlay.style.backgroundColor = 'rgba(0,0,0,0.8)';
+    overlay.style.display = 'flex';
+    overlay.style.justifyContent = 'center';
+    overlay.style.alignItems = 'center';
+    overlay.style.zIndex = 9999;
+
+    // Create box
+    const box = document.createElement('div');
+    box.style.background = '#1a1a1a';
+    box.style.padding = '30px';
+    box.style.borderRadius = '12px';
+    box.style.width = '300px';
+    box.style.textAlign = 'center';
+
+    // Title
+    const title = document.createElement('h2');
+    title.innerText = 'Enter Password';
+    title.style.marginTop = 0;
+    title.style.fontWeight = 'bold';
+    title.style.color = 'white';
+
+    // Input
+    const input = document.createElement('input');
+    input.type = 'password';
+    input.style.width = '90%';
+    input.style.padding = '12px';
+    input.style.marginTop = '10px';
+    input.style.borderRadius = '8px';
+    input.style.border = 'none';
+    input.style.backgroundColor = '#333';
+    input.style.color = 'white';
+    input.style.fontSize = '16px';
+
+    // Button
+    const btn = document.createElement('button');
+    btn.innerText = 'Enter';
+    btn.style.marginTop = '15px';
+    btn.style.padding = '12px 20px';
+    btn.style.width = '100%';
+    btn.style.backgroundColor = '#4caf50';
+    btn.style.color = 'white';
+    btn.style.border = 'none';
+    btn.style.borderRadius = '8px';
+    btn.style.fontSize = '16px';
+    btn.style.cursor = 'pointer';
+
+    // Msg
+    const msg = document.createElement('p');
+    msg.style.marginTop = '10px';
+    msg.style.color = '#ff5252';
+    msg.style.fontSize = '14px';
+
+    // Append elements
+    box.appendChild(title);
+    box.appendChild(input);
+    box.appendChild(btn);
+    box.appendChild(msg);
+    overlay.appendChild(box);
+    document.body.appendChild(overlay);
+
+    // Handle login
+    btn.onclick = async () => {
+        const entered = input.value;
+        if (entered !== PASSWORD) {
+            msg.innerText = 'Wrong password';
+            return;
+        }
+
+        // Remove overlay
+        document.body.removeChild(overlay);
+
+        // Optional: redirect or reveal content here
+        // For example, hide overlay and allow access
+        alert('Access granted!');
+
+        // Optionally, you can exit fullscreen now
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+    };
+}
 </script>
 
 </body>
